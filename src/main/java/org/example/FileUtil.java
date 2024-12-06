@@ -1,16 +1,12 @@
 package org.example;
 import org.yaml.snakeyaml.Yaml;
 import javax.swing.*;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FileUtil {
     //삭제 대상 폴더 정보가 담긴 yml 파일 읽기
@@ -23,6 +19,26 @@ public class FileUtil {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    public void yamlDataWriter(String dirs) throws FileNotFoundException {
+
+        System.out.println("start");
+
+        String[] dirList = dirs.split("\n");
+        List<String> result = new ArrayList<>();
+        for (String dir : dirList) {
+            result.add(dir);
+        }
+
+        Map<String, List<String>> data = new LinkedHashMap<String, List<String>>();
+        data.put("dir", result);
+
+        Yaml yaml = new Yaml();
+        PrintWriter writer = new PrintWriter(new File("DirConfig.yml"));
+        yaml.dump(data, writer);
+
+
     }
 
     // 대상 파일의 생성 시간 조회
@@ -78,6 +94,5 @@ public class FileUtil {
             }
         }
     }
-
 
 }
