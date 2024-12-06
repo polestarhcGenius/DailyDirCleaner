@@ -21,7 +21,9 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     public void setDesign(){
-        this.setLayout(new FlowLayout());
+        this.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        // this.setLayout(new FlowLayout());
+
 
         // 160 40
         btnImmediatelyDelete = new JButton("즉시삭제");
