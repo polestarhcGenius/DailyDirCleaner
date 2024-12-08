@@ -10,19 +10,51 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
-import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS;
-
 
 public class SetDirDialog extends JDialog {
     JButton addDir, btnSave, btnCancel;
     FileUtil fileUtil = new FileUtil();
-    List<String> ymlDate;
+    List<String> ymlData;
+    JPanel subPanel;
 
+    public JPanel makeSubPanel(List<String> dirData){
+        subPanel = new JPanel();
+        subPanel.setBackground(Color.WHITE);
+        subPanel.setLayout(new BoxLayout(subPanel, BoxLayout.Y_AXIS));
+
+
+
+        for (String dir: dirData){
+            JPanel rowPanel = new JPanel(new BorderLayout());
+
+            JTextArea dirTextArea = new JTextArea(1, 50);
+            dirTextArea.setWrapStyleWord(true);
+            dirTextArea.setEditable(false);
+            dirTextArea.append(dir);
+
+            JButton btnDelete = new JButton("삭제");
+            btnDelete.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    rowPanel.setVisible(false);
+                    ymlData.remove(String.valueOf(dir));
+                }
+            });
+
+
+
+            rowPanel.add(dirTextArea, BorderLayout.CENTER);
+            rowPanel.add(btnDelete, BorderLayout.EAST);
+
+            subPanel.add(rowPanel);
+
+        }
+        return subPanel;
+    }
 
     public SetDirDialog(MainFrame mainFrame, String title, boolean modal){
         super(mainFrame, title, modal);
-        ymlDate = fileUtil.yamlDataLoader();
+        ymlData = fileUtil.yamlDataLoader();
 
         this.setBounds(mainFrame.getX() + 200, mainFrame.getY() + 125, 800, 250);
         this.getContentPane().setLayout(new FlowLayout());
@@ -32,19 +64,51 @@ public class SetDirDialog extends JDialog {
         // modalTopPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10) );
 
         modalTopPanel.add(new JLabel("추가된 경로"));
-        JTextArea dirTextArea = new JTextArea(5, 50);
-        dirTextArea.setWrapStyleWord(true);
-        JScrollPane dirScrollPane = new JScrollPane(dirTextArea);
-        dirTextArea.setEditable(false);
-
-        for (String dir : ymlDate) {
-            dirTextArea.append(dir + "\n");
-        }
-
-        // dirTextArea.setText(ymlDate.toString().replace(",", "\n"));
 
 
-        modalTopPanel.add(dirScrollPane);
+//        JPanel modalSubPanel = new JPanel();
+//        modalSubPanel.setBackground(Color.WHITE);
+//
+//        JTextArea dirTextArea = new JTextArea(1, 50);
+//        dirTextArea.setWrapStyleWord(true);
+//        dirTextArea.setEditable(false);
+//        dirTextArea.append(ymlData.get(0));
+//        modalSubPanel.add(dirTextArea);
+//
+//        JButton btnDelete = new JButton("삭제");
+//        btnDelete.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                modalSubPanel.setVisible(false);
+//                ymlData.remove(0);
+//            }
+//        });
+//        modalSubPanel.add(btnDelete);
+//
+
+        JScrollPane scroll = new JScrollPane(makeSubPanel(ymlData));
+        scroll.setPreferredSize(new Dimension(650, 100));
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        modalTopPanel.add(scroll);
+
+
+
+
+
+//
+//        JTextArea dirTextArea = new JTextArea(5, 50);
+//        dirTextArea.setWrapStyleWord(true);
+//        JScrollPane dirScrollPane = new JScrollPane(dirTextArea);
+//        dirTextArea.setEditable(false);
+//
+//        for (String dir : ymlData) {
+//            dirTextArea.append(dir + "\n");
+//        }
+//
+//        modalTopPanel.add(dirScrollPane);
+
+
         this.getContentPane().add(modalTopPanel);
 
 
@@ -69,7 +133,33 @@ public class SetDirDialog extends JDialog {
                         JOptionPane.showMessageDialog(null, "디렉토리" + newDir + "는 존재하지 않거나, 올바르지 않은 경로입니다.");
                         return;
                     }
-                    dirTextArea.append(newDir + "\n");
+                    ymlData.add(newDir);
+
+                    JPanel rowPanel = new JPanel(new BorderLayout());
+
+
+                    JTextArea dirTextArea = new JTextArea(1, 50);
+                    dirTextArea.setWrapStyleWord(true);
+                    dirTextArea.setEditable(false);
+                    dirTextArea.append(newDir);
+
+                    JButton btnDelete = new JButton("삭제");
+                    btnDelete.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            rowPanel.setVisible(false);
+                            ymlData.remove(String.valueOf(newDir));
+                        }
+                    });
+
+
+                    rowPanel.add(dirTextArea, BorderLayout.CENTER);
+                    rowPanel.add(btnDelete, BorderLayout.EAST);
+
+                    subPanel.add(rowPanel);
+                    subPanel.revalidate();
+                    subPanel.repaint();
+
                     dirTextInput.setText("");
                 } else {
                     JOptionPane.showMessageDialog(null, "경로를 입력해 주세요.");
@@ -78,15 +168,7 @@ public class SetDirDialog extends JDialog {
         });
 
         modalMiddlePanel.add(addDir);
-
-
-
         this.getContentPane().add(modalMiddlePanel);
-
-
-
-
-
         JPanel modalBottomPanel = new JPanel();
 
         btnSave = new JButton("저장");
@@ -96,29 +178,36 @@ public class SetDirDialog extends JDialog {
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // System.out.println(dirTextArea.getText());
-                // System.out.println(dirTextArea.toString());
-
                 try {
-                    fileUtil.yamlDataWriter(dirTextArea.getText());
+                    fileUtil.yamlDataWriter(ymlData);
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
-
+                SetDirDialog.this.setVisible(false);
             }
         });
 
 
         modalBottomPanel.add(btnSave);
 
-
-
-
         btnCancel = new JButton("취소");
         btnCancel.setBackground(new Color(228, 228, 228));
         btnCancel.setOpaque(true);
         btnCancel.setBorderPainted(false);
+        btnCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    fileUtil.yamlDataWriter(ymlData);
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+                SetDirDialog.this.setVisible(false);
+            }
+        });
+
         modalBottomPanel.add(btnCancel);
+
 
         this.getContentPane().add(modalBottomPanel);
 
