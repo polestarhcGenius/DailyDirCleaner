@@ -137,7 +137,6 @@ public class MainFrame extends JFrame implements ActionListener {
                 timeUtil.start();
 
 
-
                 textField.setEditable(false);
                 btnScheduleDelete.setText("예약삭제중단");
                 btnSetDir.setEnabled(false);
