@@ -21,18 +21,16 @@ public class FileUtil {
         }
     }
 
-    public void yamlDataWriter(String dirs) throws FileNotFoundException {
+    public void yamlDataWriter(List<String> dirs) throws FileNotFoundException {
 
-        System.out.println("start");
-
-        String[] dirList = dirs.split("\n");
-        List<String> result = new ArrayList<>();
-        for (String dir : dirList) {
-            result.add(dir);
-        }
+//        String[] dirList = dirs.split("\n");
+//        List<String> result = new ArrayList<>();
+//        for (String dir : dirList) {
+//            result.add(dir);
+//        }
 
         Map<String, List<String>> data = new LinkedHashMap<String, List<String>>();
-        data.put("dir", result);
+        data.put("dir", dirs);
 
         Yaml yaml = new Yaml();
         PrintWriter writer = new PrintWriter(new File("DirConfig.yml"));
