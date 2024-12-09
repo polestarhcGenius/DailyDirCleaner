@@ -74,23 +74,39 @@ public class FileUtil {
     }
 
 
-    public void deleteFile(List<String> pathList){
+    public void deleteFile(List<String> pathList, JTextArea resultTextArea){
+        String logData = "";
         for (String path : pathList){
             if (!new File(path).isDirectory()){ // 경로 유효성 검증
-                JOptionPane.showMessageDialog(null, "디렉토리" + path + "는 존재하지 않거나, 올바르지 않은 경로입니다.");
+                // JOptionPane.showMessageDialog(null, "디렉토리" + path + "는 존재하지 않거나, 올바르지 않은 경로입니다.");
+                logData += path + ": 해당 디렉토리는 존재하지 않거나, 올바르지 않은 경로입니다.\n";
                 continue;
             }
             List<String> fileList = getFileList(path);
+            int totalCount = fileList.size();
+            int errorCount = 0;
+            String err_msg = "";
+
             for (String file : fileList){
-                boolean result = new File(file).delete(); // 삭제 수행
-                if (result){
+                Path filePath = Paths.get(file);
+                try{
+                    Files.delete(filePath);
                     System.out.println("Deleted file: " + file);
-                } else {
-                    JOptionPane.showMessageDialog(null, file + "은 시스템 파일이거나 현재 실행중인 파일이므로 삭제에 실패했습니다.");
-                    System.out.println("Failed to delete file: " + file);
+                    resultTextArea.append("Deleted file: " + file + "\n");
+                } catch (IOException e) {
+                    errorCount++;
+                    System.out.println(e);
+                    err_msg += e + "\n";
+                    resultTextArea.append("Failed to delete file: " + file + " " + e + "\n");
                 }
             }
+
+            int successCount = totalCount - errorCount;
+            logData += path + "총 " + totalCount + "건 중" + successCount + "건 성공, " + errorCount + "건 실패\n";
+            logData += err_msg + "\n";
         }
+        resultTextArea.append("\n<삭제 결과>\n");
+        resultTextArea.append(logData);
     }
 
 }
