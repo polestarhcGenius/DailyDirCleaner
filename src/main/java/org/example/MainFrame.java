@@ -5,36 +5,34 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MainFrame extends JFrame implements ActionListener {
+    private static final Logger logger = LoggerFactory.getLogger("MainFrame");
+
     Container cp;
     JButton btnImmediatelyDelete, btnScheduleDelete, btnSetDir;
-    FileUtil fileUtil = new FileUtil();
     TimeUtil timeUtil;
     JTextField textField;
-
     JTextArea resultTextArea;
-
-    JPanel cmdPanel;
-
+    FileUtil fileUtil = new FileUtil();
     JLabel remainTime;
-
 
     public MainFrame(String title) {
         super(title);
         cp = this.getContentPane();
-        this.setBounds(400,300,850,500);
         cp.setBackground(new Color(244,244,244));
+        this.setBounds(400,300,850,500);
+        this.setResizable(false);
         setDesign();
         setVisible(true);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void setDesign(){
         this.setLayout(new FlowLayout(FlowLayout.LEFT));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
-        // 160 40
         btnImmediatelyDelete = new JButton("즉시삭제");
         btnScheduleDelete = new JButton("예약삭제");
         btnSetDir = new JButton("삭제폴더지정");
@@ -63,7 +61,7 @@ public class MainFrame extends JFrame implements ActionListener {
         btnScheduleDelete.addActionListener(this);
         btnSetDir.addActionListener(this);
 
-        JLabel jLabel = new JLabel("파일 삭제 프로그램");
+        JLabel jLabel = new JLabel(" 파일 삭제 프로그램");
         ImageIcon icon = new ImageIcon("src/main/resources/img/pshc_logo.png");
         jLabel.setIcon(icon);
         this.setIconImage(icon.getImage());
@@ -96,47 +94,31 @@ public class MainFrame extends JFrame implements ActionListener {
 
         this.add(new JLabel("시 삭제(입력값 : 0~23)"));
 
-
-//        cmdPanel = new JPanel();
-//        cmdPanel.setBackground(new Color(228, 228, 228));
-//        cmdPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-//        cmdPanel.setPreferredSize(new Dimension(160,40));
-
         resultTextArea = new JTextArea();
-        resultTextArea.setPreferredSize(new Dimension(800,350));
         resultTextArea.setLineWrap(true); // 자동 줄바꿈
         resultTextArea.setWrapStyleWord(true); // 들여 쓰기
         resultTextArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(resultTextArea);
-//        cmdPanel.add(resultTextArea);
+        JScrollPane scrollPane = new JScrollPane(resultTextArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setPreferredSize(new Dimension(800,350));
+
         this.add(scrollPane);
-
-
-
     }
-
-
 
     @Override
     public void actionPerformed(ActionEvent e){
         Object source = e.getSource();
-
         if(source==btnImmediatelyDelete){
-            JOptionPane.showMessageDialog(this, "즉시삭제 버튼클릭");
+            JOptionPane.showMessageDialog(this, "즉시삭제를 시작합니다.");
             List<String> ymlData =  fileUtil.yamlDataLoader();
-            fileUtil.deleteFile(ymlData);
+            fileUtil.deleteFile(ymlData, resultTextArea);
         } else if (source==btnScheduleDelete){
             if (btnScheduleDelete.getText() == "예약삭제"){
                 if (textField.getText().isEmpty()){
                     JOptionPane.showMessageDialog(this, "예약 시간을 지정해 주세요.");
                     return;
                 }
-
-
-                timeUtil = new TimeUtil(textField.getText(), remainTime);
+                timeUtil = new TimeUtil(textField.getText(), remainTime, resultTextArea);
                 timeUtil.start();
-
-
                 textField.setEditable(false);
                 btnScheduleDelete.setText("예약삭제중단");
                 btnSetDir.setEnabled(false);
@@ -145,13 +127,10 @@ public class MainFrame extends JFrame implements ActionListener {
                 btnScheduleDelete.setText("예약삭제");
                 btnSetDir.setEnabled(true);
                 textField.setEditable(true);
+                remainTime.setText("00:00:00");
             }
         } else if (source==btnSetDir) {
             new SetDirDialog(this, "삭제 폴더 지정", true);
         }
-
-
     }
-
-
 }
