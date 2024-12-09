@@ -12,13 +12,16 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-
-    //    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
     implementation group: 'dev.akkinoc.util', name: 'yaml-resource-bundle', version: '2.7.1'
     implementation 'org.yaml:snakeyaml:1.33'
 
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+    implementation 'org.slf4j:slf4j-api:1.7.9'
+
 }
+
+
 
 test {
     useJUnitPlatform()

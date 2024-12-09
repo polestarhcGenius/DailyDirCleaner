@@ -1,11 +1,14 @@
 package org.example;
-import java.util.Date;
-import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
 public class Main {
+    private static final Logger logger = LoggerFactory.getLogger("Main");
     public static void main(String[] args){
-         new MainFrame("DirCleaner V 1.0");
+        logger.info("Program started");
+        new MainFrame("DirCleaner V 1.0");
     }
 }
