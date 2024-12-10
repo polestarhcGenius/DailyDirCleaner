@@ -1,9 +1,14 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'org.example'
 version = '1.0-SNAPSHOT'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
 
 repositories {
     mavenCentral()
@@ -29,11 +34,10 @@ test {
 
 jar {
     manifest {
-        attributes(
-                'Main-Class': 'org.example.Main'
-        )
+        attributes 'Main-Class': 'org.example.Main'
     }
     from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        sourceSets.main.allSource
     }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
