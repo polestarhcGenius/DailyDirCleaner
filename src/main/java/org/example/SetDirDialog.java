@@ -157,11 +157,6 @@ public class SetDirDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 logger.info("취소 버튼 클릭");
-                try {
-                    fileUtil.yamlDataWriter(ymlData);
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
                 SetDirDialog.this.setVisible(false);
             }
         });
