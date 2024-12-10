@@ -6,6 +6,6 @@ public class Main {
         System.out.println("삭제 시작");
         FileUtil fileUtil = new FileUtil();
         List<String> ymlData =  fileUtil.yamlDataLoader();
-        fileUtil.deleteFile(ymlData);
+        // fileUtil.deleteFile(ymlData);
     }
 }
