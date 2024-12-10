@@ -85,8 +85,17 @@ public class SetDirDialog extends JDialog {
                 if (!newDir.isEmpty()) {
                     if (!new File(newDir).isDirectory()){
                         JOptionPane.showMessageDialog(null, "디렉토리" + newDir + "는 존재하지 않거나, 올바르지 않은 경로입니다.");
+                        dirTextInput.setText("");
                         return;
                     }
+
+                    if (ymlData.contains(newDir) || ymlData.contains(newDir + File.separator) || ymlData.contains(newDir.substring(0, newDir.length()-1))){
+                        JOptionPane.showMessageDialog(null, "디렉토리" + newDir + "는 이미 추가된 경로입니다.");
+                        dirTextInput.setText("");
+                        return;
+                    }
+
+
                     ymlData.add(newDir);
                     JPanel rowPanel = new JPanel(new BorderLayout());
 
