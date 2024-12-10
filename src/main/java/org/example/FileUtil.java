@@ -59,7 +59,12 @@ public class FileUtil {
         File dir = new File(path);
         String[] files = dir.list();
         List<String> result = new ArrayList<String>();
-        assert files != null;
+
+        if (files == null) {
+            return result;
+        }
+
+
         for (String s : files) {
             File file = new File(dir.getPath() + File.separator + s);
             if (file.exists() && file.isFile()) {
@@ -71,6 +76,7 @@ public class FileUtil {
                 }
             }
         }
+
         result.remove(String.valueOf(lastFile));
         return result;
     }
