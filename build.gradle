@@ -28,5 +28,12 @@ test {
 }
 
 jar {
-    enabled = false
+    manifest {
+        attributes(
+                'Main-Class': 'org.example.Main'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
