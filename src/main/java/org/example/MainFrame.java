@@ -25,9 +25,10 @@ public class MainFrame extends JFrame implements ActionListener {
         cp.setBackground(new Color(244,244,244));
         this.setBounds(400,300,850,500);
         this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        logger.info("MainFrame start");
         setDesign();
         setVisible(true);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void setDesign(){
@@ -69,7 +70,7 @@ public class MainFrame extends JFrame implements ActionListener {
         jLabel.setFont(new Font("default", Font.BOLD, 22));
         this.add(jLabel);
 
-        this.add(Box.createRigidArea(new Dimension(70, 0)));
+        this.add(Box.createRigidArea(new Dimension(50, 0)));
 
         this.add(btnImmediatelyDelete);
         this.add(btnScheduleDelete);
@@ -108,14 +109,27 @@ public class MainFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e){
         Object source = e.getSource();
         if(source==btnImmediatelyDelete){
+            logger.info("btnImmediatelyDelete clicked");
             JOptionPane.showMessageDialog(this, "즉시삭제를 시작합니다.");
             List<String> ymlData =  fileUtil.yamlDataLoader();
             fileUtil.deleteFile(ymlData, resultTextArea);
         } else if (source==btnScheduleDelete){
             if (btnScheduleDelete.getText() == "예약삭제"){
+                logger.info("btnScheduleDelete clicked");
                 if (textField.getText().isEmpty()){
                     JOptionPane.showMessageDialog(this, "예약 시간을 지정해 주세요.");
                     return;
+                } else {
+                    try{
+                        int hour = Integer.parseInt(textField.getText());
+                        if (hour > 23 || hour < 0){
+                            JOptionPane.showMessageDialog(this, "올바른 값을 지정해 주세요. (0~23) ");
+                            return;
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this, "올바른 값을 지정해 주세요. (0~23) ");
+                        return;
+                    }
                 }
                 timeUtil = new TimeUtil(textField.getText(), remainTime, resultTextArea);
                 timeUtil.start();
@@ -130,6 +144,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 remainTime.setText("00:00:00");
             }
         } else if (source==btnSetDir) {
+            logger.info("btnSetDir clicked");
             new SetDirDialog(this, "삭제 폴더 지정", true);
         }
     }
