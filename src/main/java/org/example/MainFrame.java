@@ -70,7 +70,7 @@ public class MainFrame extends JFrame implements ActionListener {
         jLabel.setFont(new Font("default", Font.BOLD, 22));
         this.add(jLabel);
 
-        this.add(Box.createRigidArea(new Dimension(50, 0)));
+        this.add(Box.createRigidArea(new Dimension(65, 0)));
 
         this.add(btnImmediatelyDelete);
         this.add(btnScheduleDelete);
@@ -99,8 +99,8 @@ public class MainFrame extends JFrame implements ActionListener {
         resultTextArea.setLineWrap(true); // 자동 줄바꿈
         resultTextArea.setWrapStyleWord(true); // 들여 쓰기
         resultTextArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(resultTextArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setPreferredSize(new Dimension(800,350));
+        JScrollPane scrollPane = new JScrollPane(resultTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setPreferredSize(new Dimension(820,350));
 
         this.add(scrollPane);
     }
