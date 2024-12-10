@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +53,15 @@ public class SetDirDialog extends JDialog {
     public SetDirDialog(MainFrame mainFrame, String title, boolean modal){
         super(mainFrame, title, modal);
         ymlData = fileUtil.yamlDataLoader();
+        ymlData = ymlData.stream()
+                .filter(dir -> new File(dir).isDirectory())
+                .collect(Collectors.toList());
+        try {
+            fileUtil.yamlDataWriter(ymlData);
+        } catch (FileNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+
 
         this.setBounds(mainFrame.getX() + 200, mainFrame.getY() + 125, 800, 250);
         this.getContentPane().setLayout(new FlowLayout());
