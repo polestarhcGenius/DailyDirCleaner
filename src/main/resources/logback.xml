@@ -2,17 +2,20 @@
 <configuration scan="true" scanPeriod="30 seconds">
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
+            <charset>UTF-8</charset>
             <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</Pattern>
         </encoder>
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <charset>UTF-8</charset>
             <fileNamePattern>./log/%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>100</maxHistory>
         </rollingPolicy>
 
         <encoder>
+            <charset>UTF-8</charset>
             <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</Pattern>
         </encoder>
     </appender>

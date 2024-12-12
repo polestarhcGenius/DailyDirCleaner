@@ -11,7 +11,8 @@ import org.slf4j.LoggerFactory;
 public class MainFrame extends JFrame implements ActionListener {
     private static final Logger logger = LoggerFactory.getLogger("MainFrame");
 
-    Container cp;
+    // private
+    // Container cp;
     JButton btnImmediatelyDelete, btnScheduleDelete, btnSetDir;
     TimeUtil timeUtil;
     JTextField textField;
@@ -21,8 +22,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
     public MainFrame(String title) {
         super(title);
-        cp = this.getContentPane();
-        cp.setBackground(new Color(244,244,244));
+        // cp = this.getContentPane();
+        // cp.setBackground(new Color(244,244,244));
         this.setBounds(400,300,850,500);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
